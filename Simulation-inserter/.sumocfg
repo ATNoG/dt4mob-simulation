@@ -1,0 +1,16 @@
+<configuration>
+    <input>
+        <net-file value="osm.net.xml"/>
+        <route-files value="routes.rou.xml"/>
+        <additional-files value="inductionloops/detectors.det.xml,calibrator/calibrator.add.xml"/>
+    </input>
+    
+    <time>
+        <step-length value="1.0"/>
+    </time>
+
+    <output>
+        <verbose value="true"/>
+        <duration-log.statistics value="true"/>
+    </output>
+</configuration>

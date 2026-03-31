@@ -1,0 +1,92 @@
+<additional>
+
+    <!-- A20_15 -->
+    <!-- lanes 6-4 -->
+    <inductionLoop id="105482346_0" lane="105482346_0" pos="660" file="inductionoutput.xml"/>
+    <inductionLoop id="105482346_1" lane="105482346_1" pos="662" file="inductionoutput.xml"/>
+    <inductionLoop id="105482346_2" lane="105482346_2" pos="662" file="inductionoutput.xml"/>
+    <!-- lanes 1-3 -->
+    <inductionLoop id="35047582_0" lane="35047582_0" pos="534" file="inductionoutput.xml"/>
+    <inductionLoop id="35047582_1" lane="35047582_1" pos="534" file="inductionoutput.xml"/>
+    <inductionLoop id="35047582_2" lane="35047582_2" pos="534" file="inductionoutput.xml"/>
+
+    <!-- A20_13 -->
+    <!-- lanes 1 to 4 -->
+    <inductionLoop id="479365565_0" lane="479365565_0" pos="2" file="inductionoutput.xml"/>
+    <inductionLoop id="479365565_1" lane="479365565_1" pos="2" file="inductionoutput.xml"/>
+    <inductionLoop id="479365565_2" lane="479365565_2" pos="2" file="inductionoutput.xml"/>
+    <inductionLoop id="479365565_3" lane="479365565_3" pos="2" file="inductionoutput.xml"/>
+    <!-- lanes 8 to 5 -->
+    <inductionLoop id="479365561_0" lane="479365561_0" pos="2" file="inductionoutput.xml"/>
+    <inductionLoop id="479365561_1" lane="479365561_1" pos="2" file="inductionoutput.xml"/>
+    <inductionLoop id="479365561_2" lane="479365561_2" pos="2" file="inductionoutput.xml"/>
+    <inductionLoop id="479365561_3" lane="479365561_3" pos="2" file="inductionoutput.xml"/>
+
+    <!-- A20_12_980 -->
+    <!-- lanes 1-4 -->
+    <inductionLoop id="478882413_0" lane="478882413_0" pos="10" file="inductionoutput.xml"/>
+    <inductionLoop id="478882413_1" lane="478882413_1" pos="10" file="inductionoutput.xml"/>
+    <inductionLoop id="478882413_2" lane="478882413_2" pos="10" file="inductionoutput.xml"/>
+    <inductionLoop id="478882413_3" lane="478882413_3" pos="10" file="inductionoutput.xml"/>
+    <!-- lanes 9-5 -->
+    <inductionLoop id="478886779_0" lane="478886779_0" pos="191" file="inductionoutput.xml"/>
+    <inductionLoop id="478886779_1" lane="478886779_1" pos="191" file="inductionoutput.xml"/>
+    <inductionLoop id="478886779_2" lane="478886779_2" pos="191" file="inductionoutput.xml"/>
+    <inductionLoop id="478886779_3" lane="478886779_3" pos="191" file="inductionoutput.xml"/>
+    <inductionLoop id="478886779_4" lane="478886779_4" pos="191" file="inductionoutput.xml"/>
+
+    <!-- A20_12_325 -->
+    <!-- lanes 5 and 4 -->
+    <inductionLoop id="478882418_0" lane="478882418_0" pos="9" file="inductionoutput.xml"/>
+    <inductionLoop id="478882418_1" lane="478882418_1" pos="9" file="inductionoutput.xml"/>
+    <!-- lanes 1 to 3 -->
+    <inductionLoop id="478886777_0" lane="478886777_0" pos="126" file="inductionoutput.xml"/>
+    <inductionLoop id="478886777_1" lane="478886777_1" pos="126" file="inductionoutput.xml"/>
+    <inductionLoop id="478886777_2" lane="478886777_2" pos="126" file="inductionoutput.xml"/>
+
+    <!-- A20_11_600 -->
+    <!-- lanes 1-4 -->
+    <inductionLoop id="478886770_0" lane="478886770_0" pos="8" file="inductionoutput.xml"/>
+    <inductionLoop id="478886770_1" lane="478886770_1" pos="8" file="inductionoutput.xml"/>
+    <inductionLoop id="478886770_2" lane="478886770_2" pos="8" file="inductionoutput.xml"/>
+    <inductionLoop id="478886770_3" lane="478886770_3" pos="8" file="inductionoutput.xml"/>
+    <!-- lanes 8-5 -->
+    <inductionLoop id="480146192_0" lane="480146192_0" pos="60" file="inductionoutput.xml"/>
+    <inductionLoop id="480146192_1" lane="480146192_1" pos="60" file="inductionoutput.xml"/>
+    <inductionLoop id="480146192_2" lane="480146192_2" pos="60" file="inductionoutput.xml"/>
+    <inductionLoop id="480146192_3" lane="480146192_3" pos="60" file="inductionoutput.xml"/>
+
+    <!-- A20_10_150 -->
+    <!-- lanes 8-5 -->
+    <inductionLoop id="508107803_0" lane="508107803_0" pos="20" file="inductionoutput.xml"/>
+    <inductionLoop id="508107803_1" lane="508107803_1" pos="20" file="inductionoutput.xml"/>
+    <inductionLoop id="508107803_2" lane="508107803_2" pos="20" file="inductionoutput.xml"/>
+    <inductionLoop id="508107803_3" lane="508107803_3" pos="20" file="inductionoutput.xml"/>
+    <!-- lanes 1-4 -->
+    <inductionLoop id="1297166251_0" lane="1297166251_0" pos="20" file="inductionoutput.xml"/>
+    <inductionLoop id="1297166251_1" lane="1297166251_1" pos="20" file="inductionoutput.xml"/>
+    <inductionLoop id="1297166251_2" lane="1297166251_2" pos="20" file="inductionoutput.xml"/>
+    <inductionLoop id="1297166251_3" lane="1297166251_3" pos="20" file="inductionoutput.xml"/>
+
+    <!-- A28_1_850 -->
+    <!-- lanes 1-4 -->
+    <inductionLoop id="479127845_0" lane="479127845_0" pos="10" file="inductionoutput.xml"/>
+    <inductionLoop id="479127845_1" lane="479127845_1" pos="10" file="inductionoutput.xml"/>
+    <inductionLoop id="479127845_2" lane="479127845_2" pos="10" file="inductionoutput.xml"/>
+    <inductionLoop id="479127845_3" lane="479127845_3" pos="10" file="inductionoutput.xml"/>
+    <!-- lanes 7-5 -->
+    <inductionLoop id="479127855_0" lane="479127855_0" pos="63" file="inductionoutput.xml"/>
+    <inductionLoop id="479127855_1" lane="479127855_1" pos="63" file="inductionoutput.xml"/>
+    <inductionLoop id="479127855_2" lane="479127855_2" pos="63" file="inductionoutput.xml"/>
+
+    <!-- A28_1_050 -->
+    <!-- lanes 6-4 -->
+    <inductionLoop id="63202744_0" lane="63202744_0" pos="140" file="inductionoutput.xml"/>
+    <inductionLoop id="63202744_1" lane="63202744_1" pos="140" file="inductionoutput.xml"/>
+    <inductionLoop id="63202744_2" lane="63202744_2" pos="140" file="inductionoutput.xml"/>
+    <!-- lanes 1-3 -->
+    <inductionLoop id="453955770_0" lane="453955770_0" pos="136" file="inductionoutput.xml"/>
+    <inductionLoop id="453955770_1" lane="453955770_1" pos="136" file="inductionoutput.xml"/>
+    <inductionLoop id="453955770_2" lane="453955770_2" pos="136" file="inductionoutput.xml"/>
+
+</additional>

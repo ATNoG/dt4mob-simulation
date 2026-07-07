@@ -61,7 +61,6 @@ class SumoSimulator():
         length:float = traci.vehicle.getLength(v_id)
         width:float = traci.vehicle.getWidth(v_id)
         height:float = traci.vehicle.getHeight(v_id)
-        v_type:str = traci.vehicle.getTypeID(v_id)
 
         v_id = v_id.replace("#","_")
         
@@ -76,7 +75,7 @@ class SumoSimulator():
             length=length,
             width=width,
             height=height,
-            vehicle_Type=VType(v_type)
+            vehicle_Type=VType.CAR
             )
         return vehicle
 

@@ -19,6 +19,7 @@ class BaseVehicleMessage(BaseModel):
 class VehicleDataMessage(BaseVehicleMessage):
     msg_type: Literal[VehicleMessageType.DATA] = VehicleMessageType.DATA
     id: str
+    geotile: int
     extra: Dict[str, Any]
 
 class VehicleDeleteMessage(BaseVehicleMessage):

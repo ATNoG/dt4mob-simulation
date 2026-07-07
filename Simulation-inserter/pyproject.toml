@@ -12,4 +12,5 @@ dependencies = [
     "pydantic>=2.12.5",
     "pydantic-settings>=2.12.0",
     "traci>=1.25.0",
+    "websockets>=16.0",
 ]

@@ -1,0 +1,31 @@
+# Default values for car_counter_chart. This is a YAML-formatted file.
+
+replicaCount: 1
+
+image:
+  repository: "atnog-harbor.av.it.pt/dt4mob/sumo_simulator"
+  tag: "latest"
+  imagePullPolicy: "Always"
+
+config:
+  logLevel: "INFO"
+
+  ditto:
+    url: "dt4mob-ditto-gateway:8080"
+    baseApiPath: "/api/2"
+    baseWsPath: "/ws/2"
+
+    ttlTraciCar: 2
+    traciNamespace: "traci"
+    traciPolicyId: "dt4mob:default"
+
+  auth:
+    authEndpoint: "https://dt4mob-keycloak:8443/auth/realms/dt4mob/protocol/openid-connect/token"
+    clientId: "ditto"
+    # username: ""
+    # password: ""
+    existingSecret: ""
+    caSecret: ""
+  
+  sumo:
+    zoomLevel: 18

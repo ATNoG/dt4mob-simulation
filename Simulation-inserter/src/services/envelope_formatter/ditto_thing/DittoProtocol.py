@@ -1,5 +1,5 @@
 import uuid
-from datetime import datetime,timedelta
+from datetime import datetime,timedelta, timezone
 
 from src.Models.ditto import (
     DittoProtocolEnvelope,
@@ -27,7 +27,7 @@ class DittoThingEnvelopeFormatter():
 
         correlation_id = str(uuid.uuid4())
         
-        attributes = VehicleAttributes(expiry_ts=self._get_car_expire())
+        attributes = VehicleAttributes(expiry_ts=self._get_car_expire(),geotile=data_message.geotile)
         state = State(properties=data_message.extra)
         features = VehicleFeatures(state=state)
         vehicle = BaseEmptyVehicle(attributes=attributes,features=features)
@@ -35,7 +35,7 @@ class DittoThingEnvelopeFormatter():
 
         update_envelope = DittoProtocolEnvelope(
             topic=f"{settings.ditto.traci_namespace}/{settings.ditto.with_prefix(data_message.id)}/things/twin/commands/merge",
-            headers=Headers(correlation_id=correlation_id,content_type="application/merge-patch+json"),
+            headers=Headers(correlation_id=correlation_id,content_type="application/merge-patch+json",response_required=False,requested_acks=[]),
             path="/",
             value=vehicle.model_dump(exclude_none=True,by_alias=True),
         )
@@ -46,7 +46,7 @@ class DittoThingEnvelopeFormatter():
         correlation_id = str(uuid.uuid4())
         return DittoProtocolEnvelope(
                 topic=f"{settings.ditto.traci_namespace}/{settings.ditto.with_prefix(delete_message.id)}/things/twin/commands/delete",
-                headers=Headers(correlation_id=correlation_id),
+                headers=Headers(correlation_id=correlation_id,requested_acks=[],response_required=False),
                 path="/",
             )
 
@@ -64,14 +64,14 @@ class DittoThingEnvelopeFormatter():
             attributes=atributes
         )
         return DittoProtocolEnvelope(
-            topic=f"{settings.ditto.traci_namespace}/{settings.ditto.with_prefix(create_message.id)}/things/twin/commands/create",
-            headers=Headers(correlation_id=correlation_id),
+            topic=f"{settings.ditto.traci_namespace}/{settings.ditto.with_prefix(create_message.id)}/things/twin/commands/modify",
+            headers=Headers(correlation_id=correlation_id,requested_acks=[],response_required=False),
             path="/",
             value= base.model_dump(),
         )
     
     def _get_car_expire(self) -> str:
-        expire = datetime.now() + timedelta(minutes=settings.ditto.ttl_traci_car)
+        expire = datetime.now(timezone.utc) + timedelta(minutes=settings.ditto.ttl_traci_car)
         return expire.isoformat()
 
     def format(self, vehicle_message: VehicleMessage) -> DittoProtocolEnvelope:

@@ -66,6 +66,7 @@ class VehicleAttributes(BaseModel):
     width: Optional[float] = None
     height: Optional[float] = None
     vehicle_Type: Optional[str] = None
+    geotile: Optional[int] = None
     expiry_ts: str
 
 

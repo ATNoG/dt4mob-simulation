@@ -2,6 +2,7 @@
 __pycache__/
 *.py[codz]
 *$py.class
+routes.rou.xml
 
 # C extensions
 *.so

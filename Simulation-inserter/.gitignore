@@ -5,3 +5,4 @@ calibrator/output
 inductionoutput.xml
 test*
 deploy.sh
+values-test.yaml

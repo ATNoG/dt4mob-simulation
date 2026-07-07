@@ -1,0 +1,73 @@
+{{ $secretName := tpl .Values.config.auth.existingSecret . | default (printf "%s-secret" (include "dt4mob-sumo-simulator.fullname" .)) -}}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "dt4mob-sumo-simulator.fullname" . }}-car-counter
+  labels:
+    {{- include "dt4mob-sumo-simulator.labels" . | nindent 4 }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      {{- include "dt4mob-sumo-simulator.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      labels:
+        {{- include "dt4mob-sumo-simulator.labels" . | nindent 8 }}
+    spec:
+      containers:
+        - name: carcounter
+          image: {{ .Values.image.repository }}:{{ .Values.image.tag }}
+          imagePullPolicy: {{ .Values.image.imagePullPolicy }}
+          env:
+          - name: PYTHONUNBUFFERED
+            value: "1"
+          - name: LOG_LEVEL
+            value: {{ .Values.config.logLevel | quote }}
+
+          - name: DITTO__API_URL
+            value: {{ .Values.config.ditto.url | quote }}
+          - name: DITTO__BASE_API_PATH
+            value: {{ .Values.config.ditto.baseApiPath | quote }}
+          - name: DITTO__BASE_WS_PATH
+            value: {{ .Values.config.ditto.baseWsPath | quote }}
+          - name: DITTO__TRACI_POLICY_ID
+            value: {{ .Values.config.ditto.traciPolicyId | quote }}
+          - name: DITTO__TRACI_NAMESPACE
+            value: {{ .Values.config.ditto.traciNamespace | quote}}
+          - name: DITTO__TTL_TRACI_CAR
+            value: {{ .Values.config.ditto.ttlTraciCar }}
+
+          - name: SUMO__ZOOM_LEVEL
+            value: {{ .Values.config.sumo.zoomLevel }}
+
+          - name: AUTH__TOKEN_ENDPOINT
+            value: {{ .Values.config.auth.authEndpoint | quote }}
+          - name: AUTH__CLIENT_ID
+            value: {{ .Values.config.auth.clientId | quote }}
+          - name: AUTH__USERNAME_FILE
+            value: "/run/secrets/dt4mob/creds/username"
+          - name: AUTH__PASSWORD_FILE
+            value: "/run/secrets/dt4mob/creds/password"
+          {{- if .Values.config.auth.caSecret }}
+          - name: AUTH__CA_CRT_FILE
+            value: "/run/secrets/dt4mob/tls/ca.crt"
+          {{- end }}
+          volumeMounts:
+          - name: credentials
+            readOnly: true
+            mountPath: "/run/secrets/dt4mob/creds"
+          {{- if .Values.config.auth.caSecret }}
+          - name: tls
+            readOnly: true
+            mountPath: "/run/secrets/dt4mob/tls"
+          {{- end }}
+      volumes:
+      - name: credentials
+        secret:
+          secretName: {{ $secretName }}
+      {{- if .Values.config.auth.caSecret }}
+      - name: tls
+        secret:
+          secretName: {{ tpl .Values.config.auth.caSecret . | quote }}
+      {{- end }}

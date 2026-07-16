@@ -5,7 +5,7 @@
     </input>
 
     <processing>
-        <max-num-vehicles value="200"/>
+        <max-num-vehicles value="400"/>
         <extrapolate-departpos value="true"/>
     </processing>
     

@@ -2,7 +2,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "dt4mob-sumo-simulator.fullname" . }}-car-counter
+  name: {{ include "dt4mob-sumo-simulator.fullname" . }}
   labels:
     {{- include "dt4mob-sumo-simulator.labels" . | nindent 4 }}
 spec:
@@ -16,7 +16,7 @@ spec:
         {{- include "dt4mob-sumo-simulator.labels" . | nindent 8 }}
     spec:
       containers:
-        - name: carcounter
+        - name: sumoinserter
           image: {{ .Values.image.repository }}:{{ .Values.image.tag }}
           imagePullPolicy: {{ .Values.image.imagePullPolicy }}
           env:
@@ -25,6 +25,7 @@ spec:
           - name: LOG_LEVEL
             value: {{ .Values.config.logLevel | quote }}
 
+          ## DITTO
           - name: DITTO__API_URL
             value: {{ .Values.config.ditto.url | quote }}
           - name: DITTO__BASE_API_PATH
@@ -36,11 +37,13 @@ spec:
           - name: DITTO__TRACI_NAMESPACE
             value: {{ .Values.config.ditto.traciNamespace | quote}}
           - name: DITTO__TTL_TRACI_CAR
-            value: {{ .Values.config.ditto.ttlTraciCar }}
+            value: {{ .Values.config.ditto.ttlTraciCar | quote }}
 
+          ## SUMO
           - name: SUMO__ZOOM_LEVEL
-            value: {{ .Values.config.sumo.zoomLevel }}
+            value: {{ .Values.config.sumo.zoomLevel | quote }}
 
+          ## AUTH
           - name: AUTH__TOKEN_ENDPOINT
             value: {{ .Values.config.auth.authEndpoint | quote }}
           - name: AUTH__CLIENT_ID
@@ -53,6 +56,49 @@ spec:
           - name: AUTH__CA_CRT_FILE
             value: "/run/secrets/dt4mob/tls/ca.crt"
           {{- end }}
+
+          ## MQTT
+          {{- if .Values.config.mqtt.enabled }}
+          - name: TRANSPORT
+            value: "mqtt"
+          - name: MQTT__HOST
+            value: {{ .Values.config.mqtt.host | quote }}
+          - name: MQTT__PORT
+            value: {{ .Values.config.mqtt.port | quote }}
+          - name: MQTT__TOPIC
+            value: {{ .Values.config.mqtt.topic | quote }}
+          - name: MQTT__DEVICE
+            value: {{ .Values.config.mqtt.device | quote }}
+          - name: MQTT__TENANT
+            value: {{ .Values.config.mqtt.tenant | quote }}
+          - name: MQTT__RECONNECT_INTERVAL
+            value: {{ .Values.config.mqtt.reconnectInterval | quote }}
+
+          {{- if .Values.config.mqtt.tls.enabled }}
+
+          - name: MQTT__TLS
+            value: "true"
+          - name: MQTT__CAFILE
+            value: "/run/secrets/dt4mob/mqtt-tls/ca.crt"
+          - name: CERTIFICATE__CA_URL
+            value: {{ .Values.config.mqtt.tls.certificateIssuer | quote }}
+          - name: CERTIFICATE__SUBJECT
+            value: {{ .Values.config.mqtt.tls.subject | quote }}
+          - name: CERTIFICATE__TTL
+            value: {{ .Values.config.mqtt.tls.certificateTTl | quote }}
+          {{- end }}
+          ## Certificate Service
+          {{- if .Values.config.mqtt.tls.certSecret }}
+          - name: CERTIFICATE__CERT_FILE
+            value: "tls.crt"
+          - name: CERTIFICATE__KEY_FILE
+            value: "tls.key"
+          - name: CERTIFICATE__CERT_DIR
+            value: "/run/secrets/dt4mob/mqtt-cert"
+          {{- end }}
+
+          {{- end }}
+          
           volumeMounts:
           - name: credentials
             readOnly: true
@@ -62,6 +108,16 @@ spec:
             readOnly: true
             mountPath: "/run/secrets/dt4mob/tls"
           {{- end }}
+          {{- if .Values.config.mqtt.tls.enabled }}
+          - name: mqtt-tls
+            readOnly: true
+            mountPath: "/run/secrets/dt4mob/mqtt-tls"
+          {{- end }}
+          {{- if and .Values.config.mqtt.tls.enabled .Values.config.mqtt.tls.certSecret }}
+          - name: mqtt-cert
+            readOnly: true
+            mountPath: "/run/secrets/dt4mob/mqtt-cert"
+          {{- end }}
       volumes:
       - name: credentials
         secret:
@@ -70,4 +126,14 @@ spec:
       - name: tls
         secret:
           secretName: {{ tpl .Values.config.auth.caSecret . | quote }}
+      {{- end }}
+      {{- if .Values.config.mqtt.tls.enabled }}
+      - name: mqtt-tls
+        secret:
+          secretName: {{ tpl .Values.config.mqtt.tls.caSecret . | quote }}
+      {{- end }}
+      {{- if and .Values.config.mqtt.tls.enabled .Values.config.mqtt.tls.certSecret }}
+      - name: mqtt-cert
+        secret:
+          secretName: {{ tpl .Values.config.mqtt.tls.certSecret . | quote }}
       {{- end }}

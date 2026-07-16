@@ -10,16 +10,21 @@ from pydantic_settings import (
 from src.settings.auth import AuthSettings
 from src.settings.simulator import SimulatorSettings
 from src.settings.ditto import DittoSettings
+from src.settings.mqtt import MqttSettings
+from src.settings.certificate import CertificateSettings
 
 LogLevel = Literal["CRITICAL", "ERROR", "WARNING", "INFO", "DEBUG"]
 
 class Settings(BaseSettings):
 
     log_level: LogLevel = Field(validation_alias="log_level",default="INFO")
+    transport: Literal["ws", "mqtt"] = "ws"
 
     sumo: SimulatorSettings = SimulatorSettings.model_construct()
     auth: AuthSettings = AuthSettings.model_construct()
     ditto: DittoSettings = DittoSettings.model_construct()
+    mqtt: MqttSettings = MqttSettings.model_construct()
+    certificate: CertificateSettings = CertificateSettings.model_construct()
     
     model_config = SettingsConfigDict(
         env_file=".env",

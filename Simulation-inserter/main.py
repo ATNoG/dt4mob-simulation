@@ -1,4 +1,5 @@
 import asyncio
+import json
 import time
 import logging
 import sys
@@ -6,8 +7,12 @@ from datetime import datetime
 
 from src.Models.vehicle_message import VehicleDataMessage,VehicleCreateMessage,VehicleDeleteMessage
 
+from src.settings import settings
 from src.services.ditto_api import ditto_client
 from src.services.ditto_api.ditto_class import DittoConnectionError
+from src.services.mqtt_api import mqtt_client
+from src.services.mqtt_api.mqtt_client import MqttConnectionError
+from src.services.certificate import certificate_service
 from src.services.simulator import sumo_simulator
 from src.services.envelope_formatter.ditto_thing import envelop_formater
 message_queue = asyncio.Queue(maxsize=10000)
@@ -20,9 +25,53 @@ async def ditto_client_worker():
             await ditto_client.send_envelope(payload)
         except DittoConnectionError as e:
             pass
-            # logging.warning(f"Ditto disconnected, discarding message: {e}")
         finally:
             message_queue.task_done()
+
+_TOPIC_QOS_MAP = {
+    "commands/modify": "create",
+    "commands/merge": "data",
+    "commands/delete": "delete",
+}
+
+
+async def mqtt_client_worker():
+    logging.info("MQTT sender Worker started")
+    qos_map = settings.mqtt.qos_map
+    default_qos = settings.mqtt.qos
+    while True:
+        payload = await message_queue.get()
+        
+        # We use an inner loop to keep retrying the SAME message until it succeeds
+        while True:
+            try:
+                qos = default_qos
+                try:
+                    data = json.loads(payload)
+                    topic: str = data.get("topic", "")
+                    for suffix, msg_type in _TOPIC_QOS_MAP.items():
+                        if topic.endswith(suffix):
+                            qos = qos_map.get(msg_type, default_qos)
+                            break
+                except (json.JSONDecodeError, TypeError):
+                    pass
+
+                await mqtt_client.publish(payload, qos=qos)
+                
+                message_queue.task_done()
+                break
+                
+            except MqttConnectionError as e:
+                logging.warning(
+                    f"MQTT publish failed: {e}. Connection unstable. "
+                    f"Retrying same message in 2 seconds... "
+                    f"(Current queue size: {message_queue.qsize()})"
+                )
+                await asyncio.sleep(2.0)
+                
+            except Exception as e:
+                logging.critical(f"Unexpected worker crash: {type(e).__name__}: {e}. Retrying in 5s...")
+                await asyncio.sleep(5.0)
 
 async def run_simulation_producer(created_ids:dict[str,datetime]):
     logging.info("Simulation Producer Started")
@@ -88,13 +137,21 @@ async def run_simulation_producer(created_ids:dict[str,datetime]):
         await asyncio.sleep(sleep_time)
 
 async def main():
-    logging.info("Connecting Ditto")
-    await ditto_client.connect()
-    logging.info("Connected")
+    transport = settings.transport
+    logging.info(f"Using transport: {transport}")
+
+    if transport == "mqtt":
+        if settings.mqtt.tls:
+            cert_path, key_path = await certificate_service.get_cert_paths()
+            mqtt_client.set_tls(cert_path, key_path)
+            mqtt_client.mqttc = mqtt_client._build_client()
+        await mqtt_client.start()
+        worker = asyncio.create_task(mqtt_client_worker())
+    else:
+        await ditto_client.connect()
+        worker = asyncio.create_task(ditto_client_worker())
 
     created_ids: dict[str, datetime] = {}
-
-    worker = asyncio.create_task(ditto_client_worker())
 
     try:
         await run_simulation_producer(created_ids)
@@ -117,7 +174,10 @@ async def main():
             pass
 
         logging.info("Closing connections")
-        await ditto_client.close()
+        if transport == "mqtt":
+            await mqtt_client.stop()
+        else:
+            await ditto_client.close()
 
         logging.info("Shutdown complete.")
 

@@ -6,3 +6,5 @@ inductionoutput.xml
 test*
 deploy.sh
 values-test.yaml
+ca.crt
+tmp/

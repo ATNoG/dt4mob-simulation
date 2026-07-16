@@ -30,7 +30,7 @@ class DittoThingEnvelopeFormatter():
         attributes = VehicleAttributes(expiry_ts=self._get_car_expire(),geotile=data_message.geotile)
         state = State(properties=data_message.extra)
         features = VehicleFeatures(state=state)
-        vehicle = BaseEmptyVehicle(attributes=attributes,features=features)
+        vehicle = BaseEmptyVehicle(policyId=settings.ditto.traci_policy_id,attributes=attributes,features=features)
 
 
         update_envelope = DittoProtocolEnvelope(

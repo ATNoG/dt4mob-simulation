@@ -69,8 +69,6 @@ class DittoClient:
         self._listen_task = asyncio.create_task(self.listen_loop())
         self._consumer_task = asyncio.create_task(self._message_consumer_worker())
 
-        await self.send_control_message("START-SEND-MESSAGES")
-
         self._refresh_task = asyncio.create_task(self._token_refresh_loop())
 
         if not self._reconnect_task or self._reconnect_task.done():

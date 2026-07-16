@@ -2,3 +2,5 @@
 .env
 .gitignore
 chart/
+ca.crt
+tmp/
